@@ -11,7 +11,7 @@ export default function Home() {
 
 			<mian className="bg-black min-h-screen flex max-w-[1500px] mx-auto">
 				<Sidebar />
-
+				<Feed />
 			</mian>
 
 		</div>
