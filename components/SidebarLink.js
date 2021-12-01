@@ -1,4 +1,4 @@
-function SidebarLink() {
+function SidebarLink({text, Icon, active}) {
     return (
         <div>
             
