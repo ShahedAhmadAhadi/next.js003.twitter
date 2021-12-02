@@ -63,7 +63,7 @@ function Input() {
     };
 
     return (
-        <div className={`border-b border-gray-700 p-3 flex space-x-3`}>
+        <div className={`border-b border-gray-700 p-3 flex space-x-3 ${loading && "opacity-60"}`}>
             <img src="https://lh3.googleusercontent.com/ogw/ADea4I6DkoF7Izv4BjFfBtq5y3LqAqXa-B7C10y8I7O5=s64-c-mo" className="h-11 w-11 rounded-full cursor-pointer" alt="" />
             <div className="w-full divide-y divide-gray-700 ">
                 <div className={`${selectedFile && "pb-7"} ${input && "space-y-2.5"}`}>
@@ -76,45 +76,47 @@ function Input() {
                     </div>}
 
                 </div>
-                <div className="flex items-center justify-between pt-2.5">
-                    <div className="flex items-center">
-                        <div className="icon" onClick={() => { filePickerRef.current.click() }}>
-                            <PhotographIcon className="h-[22px] text-[#1d9bf0]" />
-                            <input type="file" hidden onChange={addImageToPost} ref={filePickerRef} />
-                        </div>
-                        <div className="icon rotate-90">
-                            <ChartBarIcon className="text-[#1d9bf0] h-[22px]" />
-                        </div>
+                {!loading && (
+                    <div className="flex items-center justify-between pt-2.5">
+                        <div className="flex items-center">
+                            <div className="icon" onClick={() => { filePickerRef.current.click() }}>
+                                <PhotographIcon className="h-[22px] text-[#1d9bf0]" />
+                                <input type="file" hidden onChange={addImageToPost} ref={filePickerRef} />
+                            </div>
+                            <div className="icon rotate-90">
+                                <ChartBarIcon className="text-[#1d9bf0] h-[22px]" />
+                            </div>
 
-                        <div className="icon" onClick={() => setShowEmojis(!showEmojis)}>
-                            <EmojiHappyIcon className="text-[#1d9bf0] h-[22px]" />
-                        </div>
+                            <div className="icon" onClick={() => setShowEmojis(!showEmojis)}>
+                                <EmojiHappyIcon className="text-[#1d9bf0] h-[22px]" />
+                            </div>
 
-                        <div className="icon">
-                            <CalendarIcon className="text-[#1d9bf0] h-[22px]" />
+                            <div className="icon">
+                                <CalendarIcon className="text-[#1d9bf0] h-[22px]" />
+                            </div>
+                            {showEmojis && (
+                                <Picker
+                                    onSelect={addEmoji}
+                                    style={{
+                                        position: "absolute",
+                                        marginTop: "465px",
+                                        marginLeft: -40,
+                                        maxWidth: "320px",
+                                        borderRadius: "20px",
+                                    }}
+                                    theme="dark"
+                                />
+                            )}
                         </div>
-                        {showEmojis && (
-                            <Picker
-                                onSelect={addEmoji}
-                                style={{
-                                    position: "absolute",
-                                    marginTop: "465px",
-                                    marginLeft: -40,
-                                    maxWidth: "320px",
-                                    borderRadius: "20px",
-                                }}
-                                theme="dark"
-                            />
-                        )}
+                        <button
+                            className="bg-[#1d9bf0] text-white rounded-full px-4 py-1.5 font-bold shadow-md hover:bg-[#1a8cd8] disabled:hover:bg-[#1d9bf0] disabled:opacity-50 disabled:cursor-default"
+                            disabled={!input.trim() && !selectedFile}
+                        // onClick={sendPost}
+                        >
+                            Tweet
+                        </button>
                     </div>
-                    <button
-                        className="bg-[#1d9bf0] text-white rounded-full px-4 py-1.5 font-bold shadow-md hover:bg-[#1a8cd8] disabled:hover:bg-[#1d9bf0] disabled:opacity-50 disabled:cursor-default"
-                        disabled={!input.trim() && !selectedFile}
-                    // onClick={sendPost}
-                    >
-                        Tweet
-                    </button>
-                </div>
+                )}
             </div>
         </div>
 
