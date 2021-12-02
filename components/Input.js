@@ -5,9 +5,10 @@ import "emoji-mart/css/emoji-mart.css";
 import { addDoc, collection, doc, serverTimestamp, updateDoc } from "@firebase/firestore";
 import { db, storage } from "../firebase";
 import { getDownloadURL, ref, uploadString } from "@firebase/storage";
+import { useSession } from "next-auth/react";
 
 function Input() {
-
+    const { data: session } = useSession()
     const [input, setInput] = useState('')
     const [selectedFile, setSelectedFile] = useState(null)
     const [showEmojis, setShowEmojis] = useState(false)
@@ -19,10 +20,10 @@ function Input() {
         setLoading(true)
 
         const docRef = await addDoc(collection(db, 'posts'), {
-            // id: session.user.uid,
-            // username: session.user.name,
-            // userImg: session.user.image,
-            // tag: session.user.tag,
+            id: session.user.uid,
+            username: session.user.name,
+            userImg: session.user.image,
+            tag: session.user.tag,
             text: input,
             timestamp: serverTimestamp()
         })
@@ -64,7 +65,7 @@ function Input() {
 
     return (
         <div className={`border-b border-gray-700 p-3 flex space-x-3 ${loading && "opacity-60"}`}>
-            <img src="https://lh3.googleusercontent.com/ogw/ADea4I6DkoF7Izv4BjFfBtq5y3LqAqXa-B7C10y8I7O5=s64-c-mo" className="h-11 w-11 rounded-full cursor-pointer" alt="" />
+            <img src={session.user.image} className="h-11 w-11 rounded-full cursor-pointer" alt="" />
             <div className="w-full divide-y divide-gray-700 ">
                 <div className={`${selectedFile && "pb-7"} ${input && "space-y-2.5"}`}>
                     <textarea rows="2" className={`bg-transparent outline-none text-[#d9d9d9] text-lg placeholder-gray-500 tracking-wider w-full min-h-[50px]`} placeholder="What's happening?" value={input} onChange={(e) => setInput(e.target.value)}></textarea>
@@ -111,7 +112,7 @@ function Input() {
                         <button
                             className="bg-[#1d9bf0] text-white rounded-full px-4 py-1.5 font-bold shadow-md hover:bg-[#1a8cd8] disabled:hover:bg-[#1d9bf0] disabled:opacity-50 disabled:cursor-default"
                             disabled={!input.trim() && !selectedFile}
-                        // onClick={sendPost}
+                            onClick={sendPost}
                         >
                             Tweet
                         </button>

@@ -1,4 +1,5 @@
 import { SparklesIcon } from "@heroicons/react/outline"
+import { useSession } from "next-auth/react"
 import Input  from "./Input"
 
 function Feed() {
