@@ -2,6 +2,9 @@ import { PhotographIcon, XIcon, ChartBarIcon, EmojiHappyIcon, CalendarIcon } fro
 import { useRef, useState } from "react"
 import { Picker } from "emoji-mart";
 import "emoji-mart/css/emoji-mart.css";
+import { addDoc, collection, doc, serverTimestamp, updateDoc } from "@firebase/firestore";
+import { db, storage } from "../firebase";
+import { getDownloadURL, ref, uploadString } from "@firebase/storage";
 
 function Input() {
 
@@ -11,15 +14,43 @@ function Input() {
     const [loading, setLoading] = useState(false)
     const filePickerRef = useRef(null)
 
-    const sendPost = () => {
-        if (loading) return ;
+    const sendPost = async () => {
+        if (loading) return;
         setLoading(true)
 
-        // const docRef = 
+        const docRef = await addDoc(collection(db, 'posts'), {
+            // id: session.user.uid,
+            // username: session.user.name,
+            // userImg: session.user.image,
+            // tag: session.user.tag,
+            text: input,
+            timestamp: serverTimestamp()
+        })
+
+        const imageRef = ref(storage, `posts/${docRef.id}/image`)
+
+        if (selectedFile) {
+            await uploadString(imageRef, selectedFile, "data_url").then(async () => {
+                const downloadURL = await getDownloadURL(imageRef)
+                await updateDoc(doc(db, "posts", docRef.id), {
+                    image: downloadURL
+                })
+            })
+        }
+        setLoading(false)
+        setInput("")
+        setSelectedFile(null)
+        setShowEmojis(false)
     }
 
-    const addImageToPost = () => {
-
+    const addImageToPost = (e) => {
+        const reader = new FileReader();
+        if (e.target.files[0]) {
+            reader.readAsDataURL(e.target.files[0])
+        }
+        reader.onload = (readerEvent) => {
+            setSelectedFile(readerEvent.target.result)
+        }
     }
 
 
@@ -79,7 +110,7 @@ function Input() {
                     <button
                         className="bg-[#1d9bf0] text-white rounded-full px-4 py-1.5 font-bold shadow-md hover:bg-[#1a8cd8] disabled:hover:bg-[#1d9bf0] disabled:opacity-50 disabled:cursor-default"
                         disabled={!input.trim() && !selectedFile}
-                        // onClick={sendPost}
+                    // onClick={sendPost}
                     >
                         Tweet
                     </button>
