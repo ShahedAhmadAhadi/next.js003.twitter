@@ -12,12 +12,18 @@ import {
     ChatIcon as ChatIconFilled,
 } from "@heroicons/react/solid";
 import { useSession } from "next-auth/react";
+import { } from 'moment'
 import { useState } from "react";
+import { useRecoilState } from "recoil";
+import { modalState } from "../atoms/modalAtom";
 
 function Post({ id, post, postPage }) {
 
     const [comments, setComments] = useState([])
+    const [isOpen, setIsOpen] = useState(modalState)
     const { data: session } = useSession()
+
+
 
     return (
         <div className="p-3 flex cursor-pointer border-b border-gray-700">
