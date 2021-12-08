@@ -3,6 +3,7 @@ import Sidebar from '../components/Sidebar'
 import Feed from '../components/Feed'
 import { getProviders, getSession, useSession } from 'next-auth/react'
 import Login from '../components/Login'
+import Modal from '../components/Modal'
 
 export default function Home({trendingResults, followResults, providers}) {
 
@@ -22,6 +23,7 @@ export default function Home({trendingResults, followResults, providers}) {
 			<mian className="bg-black min-h-screen flex max-w-[1500px] mx-auto">
 				<Sidebar />
 				<Feed />
+				<Modal />
 			</mian>
 
 		</div>
