@@ -24,7 +24,7 @@ import Moment from "react-moment";
 function Modal() {
   const { data: session } = useSession();
   const [isOpen, setIsOpen] = useRecoilState(modalState);
-//   const [postId, setPostId] = useRecoilState(postIdState);
+  const [postId, setPostId] = useRecoilState(postIdState);
   const [post, setPost] = useState();
   const [comment, setComment] = useState("");
   const router = useRouter();

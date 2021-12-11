@@ -4,9 +4,9 @@ import { useSession } from "next-auth/react";
 import Moment from 'moment'
 import { useState, useEffect } from "react";
 import { useRecoilState } from "recoil";
-import { modalState } from "../atoms/modalAtom";
+import { modalState, postIdState } from "../atoms/modalAtom";
 import { useRouter } from "next/dist/client/router";
-import { collection, deleteDoc, doc, onSnapshot, setDoc } from "@firebase/firestore";
+import { collection, deleteDoc, doc, onSnapshot, setDoc, query, orderBy } from "@firebase/firestore";
 import { db } from "../firebase";
 
 function Post({ id, post, postPage }) {
@@ -18,7 +18,19 @@ function Post({ id, post, postPage }) {
     const { data: session } = useSession()
     const [liked, setLiked] = useState(false)
     const [likes, setLikes] = useState([])
-    // const [postId, setPostId] = useState(postIdState)
+    const [postId, setPostId] = useState(postIdState)
+
+    useEffect(
+        () =>
+          onSnapshot(
+            query(
+              collection(db, "posts", id, "comments"),
+              orderBy("timestamp", "desc")
+            ),
+            (snapshot) => setComments(snapshot.docs)
+          ),
+        [db, id]
+      );
 
     useEffect(() => {
         onSnapshot(collection(db, "posts", id, "likes"), (snapshot) => {
