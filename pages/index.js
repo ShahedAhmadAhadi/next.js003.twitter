@@ -4,6 +4,7 @@ import Feed from '../components/Feed'
 import { getProviders, getSession, useSession } from 'next-auth/react'
 import Login from '../components/Login'
 import Modal from '../components/Modal'
+import Widgets from '../components/Widgets'
 
 export default function Home({trendingResults, followResults, providers}) {
 
@@ -24,6 +25,7 @@ export default function Home({trendingResults, followResults, providers}) {
 				<Sidebar />
 				<Feed />
 				<Modal />
+				<Widgets />
 			</mian>
 
 		</div>
